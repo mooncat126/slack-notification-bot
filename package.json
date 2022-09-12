@@ -1,0 +1,15 @@
+{
+  "name": "pullrequest-cat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "",
+  "author": "kou",
+  "license": "MIT",
+  "scripts": {
+    "start": "sam build --use-container && sam local start-api",
+    "watch": "onchange 'lambda_function.py' -- yarn start"
+  },
+  "devDependencies": {
+    "onchange": "^7.1.0"
+  }
+}

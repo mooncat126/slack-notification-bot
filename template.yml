@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  slack-notification
+
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/${AppId}-${AWS::Region}-PermissionsBoundary'
+
+Parameters:
+  AppId:
+    Type: String
+
+Resources:
+  pullRequestCatFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: lambda_functions.lambda_handler
+      Runtime: python3.8
+      MemorySize: 128
+      Timeout: 60
+      Description: A Lambda function that returns a static string.
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Events:
+        PullRequestCat:
+          Type: Api
+          Properties:
+            Path: /pullrequest-cat
+            Method: post
+
+Outputs:
+  PullRequestCatApi:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/pullrequest-cat/"
+  pullRequestCatFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt pullRequestCatFunction.Arn
+  pullRequestCatFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt pullRequestCatFunctionRole.Arn
